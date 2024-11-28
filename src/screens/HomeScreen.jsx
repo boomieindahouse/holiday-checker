@@ -1,32 +1,53 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
-import '../../src/styles/HomeScreen.css';
+import { View, Text, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import styles from '../styles/HomeScreenStyles';
+import countries from '../constants/countries';
 
 export default function HomeScreen({ navigation }) {
-  const [country, setCountry] = useState('us');
-  const [year, setYear] = useState('2024');
+  const [query, setQuery] = useState('');
+  const [filteredCountries, setFilteredCountries] = useState(countries);
 
-  const searchHolidays = () => {
-    navigation.navigate('HolidayList', { country, year });
+  const searchHolidays = (countryCode) => {
+    navigation.navigate('HolidayList', { country: countryCode, year: '2024' });
+  };
+
+  const handleSearch = (text) => {
+    setQuery(text);
+    if (text) {
+      setFilteredCountries(
+        countries.filter((item) =>
+          item.name.toLowerCase().includes(text.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredCountries(countries);
+    }
   };
 
   return (
-    <View style={{ flex: 1 }} className="home-container">
-      <Text className="home-title">Check Holidays</Text>
+    <View style={styles.container}>
       <TextInput
-        className="home-input"
-        placeholder="Enter country code (e.g., us)"
-        value={country}
-        onChangeText={setCountry}
+        style={styles.input}
+        placeholder="Search for a country"
+        value={query}
+        onChangeText={handleSearch}
       />
-      <TextInput
-        className="home-input"
-        placeholder="Enter year"
-        value={year}
-        onChangeText={setYear}
-        keyboardType="numeric"
-      />
-      <Button title="Search Holidays" onPress={searchHolidays} />
+      {query ? (
+        <FlatList
+          data={filteredCountries}
+          keyExtractor={(item) => item.code}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => {
+                setQuery(item.name);
+                searchHolidays(item.code);
+              }}
+            >
+              <Text style={styles.listItem}>{item.name}</Text>
+            </TouchableOpacity>
+          )}
+        />
+      ) : null}
     </View>
   );
 }

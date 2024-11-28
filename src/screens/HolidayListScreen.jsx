@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, FlatList } from 'react-native';
 import HolidayCard from '../components/HolidayCard';
-import '../../src/styles/HolidayListScreen.css';
+import styles from '../styles/HolidayListScreenStyles';
 import { getHolidays } from '../utils/api';
 
 export default function HolidayListScreen({ route, navigation }) {
@@ -17,7 +17,7 @@ export default function HolidayListScreen({ route, navigation }) {
   }, [country, year]);
 
   return (
-    <View style={{ flex: 1 }} className="holiday-list-container">
+    <View style={styles.container}>
       <FlatList
         data={holidays}
         keyExtractor={(item) => item.date.iso}
