@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import SearchBar from '../components/SearchBar';
 import styles from '../styles/HomeScreenStyles';
 import countries from '../constants/countries';
 
@@ -26,24 +27,26 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Search for a country"
-        value={query}
-        onChangeText={handleSearch}
-      />
+      <View style={styles.header}>
+        <Text style={styles.headerText}>🌟 Holiday Checker 🌟</Text>
+      </View>
+
+      {/* ใช้ SearchBar Component */}
+      <SearchBar query={query} onSearch={handleSearch} />
+
       {query ? (
         <FlatList
           data={filteredCountries}
           keyExtractor={(item) => item.code}
           renderItem={({ item }) => (
             <TouchableOpacity
+              style={styles.listItem}
               onPress={() => {
                 setQuery(item.name);
                 searchHolidays(item.code);
               }}
             >
-              <Text style={styles.listItem}>{item.name}</Text>
+              <Text style={styles.listText}>{item.name}</Text>
             </TouchableOpacity>
           )}
         />
