@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, FlatList } from 'react-native';
-import styles from '../styles/HolidayListStyles';
+import styles from '../styles/HolidayListScreenStyles';
 import { holidayTranslations, descriptionTranslations } from '../constants/translations';
 
 export default function HolidayListScreen({ route }) {
