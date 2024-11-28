@@ -1,4 +1,4 @@
-const API_KEY = 'YOUR_API_KEY';
+const API_KEY = 'kbR57rbiL4t2WFrOLlB0swFXeP5NFuKb';
 const BASE_URL = 'https://calendarific.com/api/v2/holidays';
 
 export const getHolidays = async (country, year) => {
