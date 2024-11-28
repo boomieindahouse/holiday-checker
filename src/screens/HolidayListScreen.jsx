@@ -1,29 +1,31 @@
-import React from 'react';
-import { View, Text, FlatList } from 'react-native';
-import styles from '../styles/HolidayListScreenStyles';
-import { holidayTranslations, descriptionTranslations } from '../constants/translations';
+import React, { useEffect, useState } from 'react';
+import { View, FlatList } from 'react-native';
+import HolidayCard from '../components/HolidayCard';
+import '../../src/styles/HolidayListScreenStyles';
+import { getHolidays } from '../utils/api';
 
-export default function HolidayListScreen({ route }) {
-  const { holidays } = route.params;
+export default function HolidayListScreen({ route, navigation }) {
+  const { country, year } = route.params;
+  const [holidays, setHolidays] = useState([]);
 
-  // ฟังก์ชันสำหรับแปลชื่อวันหยุด
-  const translateHoliday = (holidayName) => holidayTranslations[holidayName] || holidayName;
-
-  // ฟังก์ชันสำหรับแปลคำอธิบาย
-  const translateDescription = (description) => descriptionTranslations[description] || description;
+  useEffect(() => {
+    const fetchHolidays = async () => {
+      const data = await getHolidays(country, year);
+      setHolidays(data);
+    };
+    fetchHolidays();
+  }, [country, year]);
 
   return (
-    <View style={styles.container}>
+    <View style={{ flex: 1 }} className="holiday-list-container">
       <FlatList
         data={holidays}
         keyExtractor={(item) => item.date.iso}
         renderItem={({ item }) => (
-          <View style={styles.holidayItem}>
-            <Text style={styles.holidayName}>{translateHoliday(item.name)}</Text>
-            <Text style={styles.holidayDescription}>
-              {translateDescription(item.description)}
-            </Text>
-          </View>
+          <HolidayCard
+            holiday={item}
+            onPress={() => navigation.navigate('HolidayDetail', { holiday: item })}
+          />
         )}
       />
     </View>
